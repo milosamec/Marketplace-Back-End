@@ -1,0 +1,36 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "Backend for Online Marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "SET NODE_ENV=production & node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/African-Marketplace-BWPT/Back-End.git"
+  },
+  "author": "Milo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/African-Marketplace-BWPT/Back-End/issues"
+  },
+  "homepage": "https://github.com/African-Marketplace-BWPT/Back-End#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.1.1",
+    "jest": "^26.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.5",
+    "sqlite3": "^5.0.0",
+    "supertest": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
