@@ -5,17 +5,14 @@ const helmet = require("helmet");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-// Load env variables / config file
-// specify path
+// Load env variables / config file / specify path
 dotenv.config({ path: "./config/config.env" });
 
 // Route Files
+const products = require("./routes/products");
+const users = require("./routes/users");
 
-// Connect to database
-connectDB();
-
-// Connect to database
-// HERE
+// Initialize express
 const app = express();
 
 // Cookie parser
@@ -31,6 +28,8 @@ app.use(helmet());
 app.use(cors());
 
 // Mount Routers
+app.use("/api/v1/products", products);
+app.use("/api/v1/users", users);
 
 const PORT = process.env.PORT || 5000;
 
