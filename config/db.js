@@ -1,8 +1,7 @@
-const connectDB = async () => {
-  const knex = require("knex");
-  const knexConfig = require("../knexfile.js");
-  knex(knexConfig.development);
-  console.log("Database Connected");
-};
+const knex = require("knex");
 
-module.exports = connectDB;
+const knexConfig = require("../knexfile.js");
+
+console.log("Database Connected");
+
+module.exports = knex(knexConfig.development);
