@@ -1,3 +1,4 @@
+const ErrorHandler = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -13,17 +14,17 @@ exports.register = asyncHandler(async (req, res, next) => {
   // If username is less than 3 chars
   // Return Error
   if (username.length < 3) {
-    return res
-      .status(409)
-      .json({ msg: "Username must be at least 3 characters long" });
+    return next(
+      new ErrorHandler("Username must be at least 3 characters long", 401)
+    );
   }
 
   // If password is less then 6 chars
   // Return Error
   if (password.length < 6) {
-    return res
-      .status(409)
-      .json({ msg: "Password must be at least 6 characters long" });
+    return next(
+      new ErrorHandler("Password must be at least 6 characters long", 401)
+    );
   }
 
   // Look for user in DB
@@ -32,9 +33,12 @@ exports.register = asyncHandler(async (req, res, next) => {
   // If user exists
   // Return Error
   if (userExists) {
-    return res.status(401).json({
-      msg: "This username is already taken, please choose a different username",
-    });
+    return next(
+      new ErrorHandler(
+        "This username is already taken, please choose a different username",
+        401
+      )
+    );
   }
 
   // Create user
@@ -57,27 +61,23 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   // Validate username & password
   if (!username || !password) {
-    return res.status(401).json({
-      msg: "Please provide a username and password",
-    });
+    return next(
+      new ErrorHandler("Please provide a username and password", 401)
+    );
   }
 
   // Check for user in database
   user = await User.findBy({ username }).first();
 
   if (!user) {
-    return res.status(401).json({
-      msg: "Invalid Credentials",
-    });
+    return next(new ErrorHandler("Invalid Credentials", 401));
   }
 
   // Match user entered password to hashed password in database
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.status(401).json({
-      msg: "Invalid Credentials",
-    });
+    return next(new ErrorHandler("Invalid Credentials", 401));
   }
 
   // Sign JWT and return
