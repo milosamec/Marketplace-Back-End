@@ -1,3 +1,4 @@
+const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Product = require("../models/Product");
 // @desc Get all products
@@ -23,7 +24,9 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(id);
 
   if (!product) {
-    return res.status(401).json({ msg: `Product not found with id of ${id}` });
+    return next(
+      new ErrorResponse(`Product not found with id of ${req.params.id}`, 404)
+    );
   }
 
   res.status(200).json({ success: true, data: product });
@@ -54,16 +57,14 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
   let product = await Product.findById(id);
 
   if (!product) {
-    return res
-      .status(401)
-      .json({ msg: `Product with ID ${id} does not exist` });
+    return next(new ErrorResponse(`Product with ID ${id} does not exist`, 404));
   }
 
   // Make sure user is product owner
   if (product.userId !== req.user.id) {
-    return res
-      .status(401)
-      .json({ msg: `User not authorized to update this product` });
+    return next(
+      new ErrorResponse(`User not authorized to update this product`, 401)
+    );
   }
 
   // Update Product
@@ -80,16 +81,12 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   let product = await Product.findById(id);
   if (!product) {
-    return res
-      .status(401)
-      .json({ msg: `Product with ID ${id} does not exist` });
+    new ErrorResponse(`Product with ID ${id} does not exist`, 401);
   }
 
   // Make sure user is product owner
   if (product.userId !== req.user.id) {
-    return res
-      .status(401)
-      .json({ msg: `User not authorized to delete this product` });
+    return next(new ErrorResponse(`Product with ID ${id} does not exist`, 401));
   }
 
   await Product.remove(id);
