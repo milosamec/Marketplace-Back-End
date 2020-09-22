@@ -4,6 +4,7 @@
   "description": "Backend for Online Marketplace",
   "main": "server.js",
   "scripts": {
+    "test": "  jest --watch --verbose --runInBand",
     "start": "SET NODE_ENV=production & node server",
     "dev": "nodemon server"
   },
