@@ -1,7 +1,6 @@
 const supertest = require('supertest')
 const app = require('../server')
 const request = supertest(app)
-app.listen(3100)
 
 it('should sign up for a user', async () => {
     const response = await request.post('/register')
@@ -25,6 +24,21 @@ it('should login user', async () => {
             done();
         });
 })
+
+var auth = {};
+
+it('should respond with JSON array', async () => {
+    const response = await request.get('/api/v1/users')
+        .set('Authorization', 'bearer ' + auth.token)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .catch(err => console.log(err))
+
+});
+
+
+
+
 
 
 
