@@ -4,7 +4,7 @@ const app = require("../server");
 describe("Users integration test", () => {
   it("should register a user", async () => {
     const res = await supertest(app).post("/api/v1/users/register").send({
-      username: "milooooo",
+      username: "pedro",
       password: "123456",
     });
     expect(res.statusCode).toBe(201);
@@ -14,7 +14,7 @@ describe("Users integration test", () => {
   let token;
   it("Should login user", async () => {
     const res = await supertest(app).post("/api/v1/users/login").send({
-      username: "milooooo",
+      username: "pedro",
       password: "123456",
     });
     expect(res.statusCode).toBe(200);

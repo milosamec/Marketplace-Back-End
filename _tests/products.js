@@ -12,14 +12,17 @@ describe("Product CRUD test", () => {
   });
 
   let token;
+  const { protect } = require("../__mocks__/auth");
   it("Should login user", async () => {
-    const res = await supertest(app).post("/api/v1/users/login").send({
-      username: "milooooo",
-      password: "123456",
-    });
+    // jest.mock("../middleware/auth");
+    const res = await protect();
     expect(res.statusCode).toBe(200);
-    expect(res.body.token);
-    token = res.body.token;
+    // const res = await supertest(app).post("/api/v1/users/login").send({
+    //   username: "pedro",
+    //   password: "123456",
+    // });
+    // expect(res.body.token);
+    // token = res.body.token;
   });
 
   it("Should add product with token", async () => {
@@ -28,7 +31,7 @@ describe("Product CRUD test", () => {
       .set("Content-Type", "application/json")
       .set("Authorization", token)
       .send({
-        title: "Miloooos Soap",
+        title: "Pedros Soap",
         description: "Moisturizing soap",
         price: "22",
         image: "randomimage.jpg",
@@ -43,7 +46,7 @@ describe("Product CRUD test", () => {
       .set("Content-Type", "application/json")
       .set("Authorization", token)
       .send({
-        title: "Miloooos Soapee",
+        title: "Pedros Soapees",
         description: "Moisturizing soap",
         price: "22",
         image: "na",
