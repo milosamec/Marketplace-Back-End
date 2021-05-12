@@ -10,7 +10,8 @@ const User = require("../models/User");
 
 exports.register = asyncHandler(async (req, res, next) => {
   
-  // These checks could also be done on the front end to avoid unnecessary API calls
+  // These checks username and password checks 
+  // could also be done on the front end to avoid unnecessary API calls
   
   // Destructure body
   const { username, password } = req.body;
