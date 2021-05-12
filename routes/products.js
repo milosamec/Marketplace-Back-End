@@ -13,6 +13,7 @@ const router = express.Router();
 // Import Auth middleware
 const { protect } = require("../middleware/auth");
 
+// Pass the Auth middleware to check for auth tokens on a specific route
 router.route("/").get(getProducts).post(protect, createProduct);
 router
   .route("/:id")
