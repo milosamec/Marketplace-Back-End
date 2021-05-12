@@ -9,6 +9,10 @@ const User = require("../models/User");
 // @access Public
 
 exports.register = asyncHandler(async (req, res, next) => {
+  
+  // These checks could also be done on the front end to avoid unnecessary API calls
+  
+  // Destructure body
   const { username, password } = req.body;
 
   // If username is less than 3 chars
@@ -42,13 +46,15 @@ exports.register = asyncHandler(async (req, res, next) => {
   }
 
   // Create user
-  // Encrypt password using bcrypt
+  // Generate a salt
+  // Encrypt password using bcrypts' hash by passing it the password and salt
   const salt = await bcrypt.genSalt(10);
   const user = await User.add({
     username,
     password: await bcrypt.hash(password, salt),
   });
 
+  // Respond with 201 on successful user creation
   res.status(201).json(user);
 });
 
@@ -57,9 +63,11 @@ exports.register = asyncHandler(async (req, res, next) => {
 // @access Public
 
 exports.login = asyncHandler(async (req, res, next) => {
+  // Destructure body
   const { username, password } = req.body;
 
   // Validate username & password
+  // Return error if it's missing username or password
   if (!username || !password) {
     return next(
       new ErrorHandler("Please provide a username and password", 401)
@@ -70,17 +78,22 @@ exports.login = asyncHandler(async (req, res, next) => {
   user = await User.findBy({ username }).first();
 
   if (!user) {
+    // If user does not exist, return error
     return next(new ErrorHandler("Invalid Credentials", 401));
   }
 
-  // Match user entered password to hashed password in database
+  // Match users entered password to hashed password in database
+  // By passing entered password + hashed password in db to bcrypt compare
   const isMatch = await bcrypt.compare(password, user.password);
 
+  // If it doesn't match
   if (!isMatch) {
+    // Return an error
     return next(new ErrorHandler("Invalid Credentials", 401));
   }
 
-  // Sign JWT and return
+  // Otherwise we want to create a token for the user
+  // Sign JWT using secret and return it to the user
   const token = jwt.sign(
     {
       id: user.id,
@@ -88,7 +101,9 @@ exports.login = asyncHandler(async (req, res, next) => {
     process.env.JWT_SECRET
   );
 
+  // Spread the user to create a copy
   user = { ...user };
+  // And delete users password from the response before returning the user and token
   delete user.password;
 
   res.status(200).json({
